@@ -1,8 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import { getMoedas } from "../service/moedaService";
 
-interface TxConversao {
-    [key: string]: number;
+interface MoedaResponse {
+    base: string;
+    rates: {
+        [key: string]: number;
+    };
 }
 
 export default function ConversorMoedas() {
@@ -10,52 +13,61 @@ export default function ConversorMoedas() {
     const [moeda1, setMoeda1] = useState<string>('USD');
     const [qtd2, setQtd2] = useState<string>('0');
     const [moeda2, setMoeda2] = useState<string>('BRL');
-    const [taxaConversao, setTaxaConversao] = useState<TxConversao>({});
+    const [taxas, setTaxas] = useState<{[key: string]: number}>({});
+    const [moedas, setMoedas] = useState<string[]>([]);
 
+    // Buscar taxas de conversão da API
     useEffect(() => {
         getMoedas()
-            .then((data) => setTaxaConversao(data))
+            .then((data: MoedaResponse) => {
+                // Adicionar a moeda base nas taxas (com valor 1)
+                const todasTaxas = { 
+                    ...data.rates,
+                    [data.base]: 1
+                };
+                setTaxas(todasTaxas);
+                setMoedas([data.base, ...Object.keys(data.rates)]);
+            })
             .catch(err => console.error(err));
     }, []);
 
+    // Converter da moeda 1 para moeda 2
     const converterMoeda = useCallback(() => {
-        const razao1 = taxaConversao[moeda1];
-        const razao2 = taxaConversao[moeda2];
+        if (Object.keys(taxas).length === 0) return;
 
-        if (!qtd1 || isNaN(Number(qtd1)) || !razao1 || !razao2) {
+        const valor = parseFloat(qtd1);
+        if (isNaN(valor) || valor < 0) {
             setQtd2('0');
             return;
         }
 
-        const resultado = (Number(qtd1) * razao2) / razao1;
-        setQtd2(resultado.toFixed(2));
-    }, [qtd1, moeda1, moeda2, taxaConversao]);
+        const taxa1 = taxas[moeda1];
+        const taxa2 = taxas[moeda2];
 
-    const converterReverso = () => {
-        const razao1 = taxaConversao[moeda1];
-        const razao2 = taxaConversao[moeda2];
-
-        if (!qtd2 || isNaN(Number(qtd2)) || !razao1 || !razao2) {
-            setQtd1('0');
+        if (!taxa1 || !taxa2) {
+            setQtd2('0');
             return;
         }
 
-        const resultado = (Number(qtd2) * razao1) / razao2;
-        setQtd1(resultado.toFixed(2));
-    };
+        const resultado = valor * (taxa2 / taxa1);
+        setQtd2(resultado.toFixed(2));
+    }, [qtd1, moeda1, moeda2, taxas]);
 
     useEffect(() => {
         converterMoeda();
-    }, [converterMoeda]);
+    }, [converterMoeda, moeda1, moeda2]);
 
+   
     const msgConversao = () => {
-        const razao1 = taxaConversao[moeda1];
-        const razao2 = taxaConversao[moeda2];
+        if (Object.keys(taxas).length === 0) return '';
 
-        if (!razao1 || !razao2) return '';
+        const taxa1 = taxas[moeda1];
+        const taxa2 = taxas[moeda2];
 
-        const razaoEntreMoedas = razao2 / razao1;
-        return `1 ${moeda1} = ${razaoEntreMoedas.toFixed(2)} ${moeda2}`;
+        if (!taxa1 || !taxa2) return '';
+
+        const razaoEntreMoedas = taxa2 / taxa1;
+        return `1 ${moeda1} = ${razaoEntreMoedas.toFixed(4)} ${moeda2}`;
     };
 
     return (
@@ -69,6 +81,7 @@ export default function ConversorMoedas() {
                     <input
                         id="quantidade1"
                         type="number"
+                        min="0"
                         value={qtd1}
                         onChange={(e) => setQtd1(e.target.value)}
                         className="w-full mt-1 p-2 border rounded-md"
@@ -85,9 +98,9 @@ export default function ConversorMoedas() {
                     onChange={(e) => setMoeda1(e.target.value)}
                     className="w-full mt-1 p-2 border rounded-md"
                 >
-                    {Object.keys(taxaConversao).map((currency) => (
-                        <option key={currency} value={currency}>
-                            {currency}
+                    {moedas.map((moeda) => (
+                        <option key={`from-${moeda}`} value={moeda}>
+                            {moeda}
                         </option>
                     ))}
                 </select>
@@ -99,6 +112,7 @@ export default function ConversorMoedas() {
                 <input
                     id="quantidade2"
                     type="number"
+                    min="0"
                     value={qtd2}
                     onChange={(e) => setQtd2(e.target.value)}
                     className="w-full mt-1 p-2 border rounded-md"
@@ -114,9 +128,9 @@ export default function ConversorMoedas() {
                     onChange={(e) => setMoeda2(e.target.value)}
                     className="w-full mt-1 p-2 border rounded-md"
                 >
-                    {Object.keys(taxaConversao).map((currency) => (
-                        <option key={currency} value={currency}>
-                            {currency}
+                    {moedas.map((moeda) => (
+                        <option key={`to-${moeda}`} value={moeda}>
+                            {moeda}
                         </option>
                     ))}
                 </select>
