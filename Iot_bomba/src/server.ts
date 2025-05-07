@@ -42,7 +42,7 @@ app.get('/evento', async (_req: Request, res: Response) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(3000, '0.0.0.0', () => {
+const PORT = process.env.PORT || 3001;
+app.listen(3001, '0.0.0.0', () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });

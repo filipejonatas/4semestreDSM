@@ -1,0 +1,46 @@
+.tabela-eventos-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+  }
+  
+  .tabela-eventos {
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 600px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  
+  .tabela-eventos th, .tabela-eventos td {
+    padding: 16px 24px;
+    text-align: left;
+  }
+  
+  .tabela-eventos th {
+    background: #f5f6fa;
+    font-weight: 700;
+    color: #333;
+    border-bottom: 2px solid #e1e1e1;
+  }
+  
+  .tabela-eventos tr {
+    transition: background 0.2s;
+  }
+  
+  .tabela-eventos tr:hover {
+    background: #f0f8ff;
+  }
+  
+  .status-badge {
+    color: #228B22;
+    background: #e6f4ea;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 0.95em;
+    display: inline-block;
+  }
