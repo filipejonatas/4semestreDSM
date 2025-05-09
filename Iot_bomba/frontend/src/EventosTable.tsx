@@ -32,12 +32,12 @@ const EventosTable: React.FC = () => {
   return (
     <div className="tabela-eventos-container">
       <div>
-        <h2 style={{ textAlign: 'center', marginBottom: 24 }}>Eventos da Bomba</h2>
+        <h2 style={{ textAlign: 'center', marginBottom: 24 }}>Detecção do Acionamento da Bomba</h2>
         <table className="tabela-eventos">
           <thead>
             <tr>
               <th>ID</th>
-              <th>Status</th>
+              <th>Status do Acionamento</th>
               <th>Data/Hora</th>
             </tr>
           </thead>
