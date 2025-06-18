@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model EventoBomba {
+  id       Int      @id @default(autoincrement())
+  status   String
+  dataAcao DateTime @default(now())
+}
+
+model User {
+  id        Int           @id @default(autoincrement())
+  name      String
+  createdAt DateTime      @default(now())
+  sessions  GameSession[]
+}
+
+model Question {
+  id            Int          @id @default(autoincrement())
+  topic         String
+  difficulty    String       @default("medium")
+  question      String
+  correctAnswer String
+  wrongAnswers  String[]
+  createdAt     DateTime     @default(now())
+  answers       GameAnswer[]
+}
+
+model GameSession {
+  id        Int          @id @default(autoincrement())
+  userId    Int
+  topic     String
+  status    String       @default("waiting")
+  score     Int          @default(0)
+  startTime DateTime?
+  endTime   DateTime?
+  timeTaken Int?
+  createdAt DateTime     @default(now())
+  answers   GameAnswer[]
+  user      User         @relation(fields: [userId], references: [id])
+}
+
+model GameAnswer {
+  id         Int         @id @default(autoincrement())
+  sessionId  Int
+  questionId Int
+  userAnswer String
+  isCorrect  Boolean
+  answeredAt DateTime    @default(now())
+  question   Question    @relation(fields: [questionId], references: [id])
+  session    GameSession @relation(fields: [sessionId], references: [id])
+}
