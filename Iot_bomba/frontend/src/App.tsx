@@ -1,4 +1,4 @@
-import EventosTable from './EventosTable';
+import EventosTable from './pages/EventosTable';
 import "./App.css"
 
 function App() {
