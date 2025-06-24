@@ -1,6 +1,7 @@
 # dependencies
 node_modules/
 lib
+bin
 
 # Expo
 .expo/

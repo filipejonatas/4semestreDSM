@@ -16,7 +16,6 @@ Uma aplicação moderna de clima construída com React Native e Expo, apresentan
 - **React Native** - Framework para aplicações móveis
 - **Expo** - Plataforma de desenvolvimento e ferramentas
 - **TypeScript** - JavaScript com tipagem segura
-- **Axios** - Cliente HTTP para requisições de API
 - **Expo Vector Icons** - Iconografia elegante
 
 ## 📋 Pré-requisitos
@@ -32,7 +31,7 @@ Antes de executar este projeto, certifique-se de ter:
 
 ### 1. **Clone o repositório**
 ```bash
-git clone https://github.com/seuusuario/tempo_agora.git
+git clone https://github.com/filipejonatas/4semestreDSM/tree/main/Mobile_Dev/Tempo_Agora
 cd tempo_agora
 ```
 ### 2. **Instale as dependências**
