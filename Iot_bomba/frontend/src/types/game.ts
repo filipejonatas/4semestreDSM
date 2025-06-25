@@ -15,6 +15,7 @@ export interface Question {
 export interface GameSession {
   id: string;
   user_id: number;
+  name ?: string;
   topic: string;
   status: 'waiting' | 'active' | 'completed' | 'failed';
   score: number;
